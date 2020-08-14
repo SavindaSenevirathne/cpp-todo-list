@@ -5,7 +5,7 @@
 # Compiler settings - Can be customized.
 CC = g++
 CXXFLAGS = -std=c++11 -Wall
-LDFLAGS = -lsodium
+LDFLAGS = -lsodium -lblake3
 
 # Makefile settings - Can be customized.
 APPNAME = todo_list

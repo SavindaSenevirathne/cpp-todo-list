@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <sodium.h>
+#include <blake3.h>
 
 using namespace std;
 
@@ -16,6 +18,7 @@ class List
         void print_all();
         void delete_item();
         void calc_hash_for_all();
+        void calc_hash_Blake3();
 };
 
 

@@ -1,5 +1,4 @@
 #include "include/list.h"
-#include <sodium.h>
 
 void List::print_menu() {
 	cout << "\n\n\n*******************" << endl;
@@ -7,7 +6,8 @@ void List::print_menu() {
 	cout << "2. Add an item" << endl;
 	cout << "3. Delete an item by index" << endl;
 	cout << "4. Hash of all using libsodium" << endl;
-	cout << "5. Exit program" << endl;
+	cout << "5. Hash of all using Blake 3" << endl;
+	cout << "6. Exit program" << endl;
 	cout << "Enter your choice: ";
 
 	int choice;
@@ -30,7 +30,11 @@ void List::print_menu() {
 			calc_hash_for_all();
 			break;
 		case 5:
+			calc_hash_Blake3();
+			break;
+		case 6:
 			exit(0);    
+			break;
 		default:
 			cout << "Invalid choice.. Try again" << endl;
 			print_menu();
@@ -85,6 +89,27 @@ void List::calc_hash_for_all() {
 			printf("%02x ", hash[j]);
 		}
 		cout << endl;
+
+	}
+}
+
+void List::calc_hash_Blake3() {
+	for (int i = 0; i < (int)list.size(); i++) {
+		
+		// Initialize the hasher.
+		blake3_hasher hasher;
+		blake3_hasher_init(&hasher);
+		blake3_hasher_update(&hasher, list[i].c_str(), sizeof list[i]);
+
+		uint8_t output[BLAKE3_OUT_LEN];
+		blake3_hasher_finalize(&hasher, output, BLAKE3_OUT_LEN);
+		// print current todo item
+		cout << i + 1 << ". " << list[i] << " - ";
+		// Print the hash as hexadecimal.
+		for (size_t i = 0; i < BLAKE3_OUT_LEN; i++) {
+			printf("%02x ", output[i]);
+		}
+		printf("\n");
 
 	}
 }

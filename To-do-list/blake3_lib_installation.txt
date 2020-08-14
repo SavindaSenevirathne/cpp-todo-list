@@ -1,0 +1,9 @@
+1. build using the given command - https://github.com/BLAKE3-team/BLAKE3/tree/master/c
+2. include header (blake3.h) in /usr/local/include
+3. include .so file in /usr/local/lib
+4. update LDFLAGS in make file accordingly. (-lblake3)
+5. set LD_LIBRARY_PATH environment variable if not set using export LD_LIBRARY_PATH="/usr/local/lib"
+6. to set path permanent,
+    make file as [sudo vi /etc/ld.so.conf.d/your_lib.conf]
+    add "/usr/local/lib"
+    run sudo ldconfig
