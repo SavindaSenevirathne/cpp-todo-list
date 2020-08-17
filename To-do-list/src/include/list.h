@@ -19,8 +19,9 @@ class List
         void add_item();
         void print_all();
         void delete_item();
-        void calc_hash_for_all();
-        void calc_hash_Blake3();
+        void calc_hash_for_all(bool printOnTerminal);
+        void calc_hash_Blake3(bool printOnTerminal);
+        void benchmark();
 };
 
 
