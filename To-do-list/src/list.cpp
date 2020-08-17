@@ -37,10 +37,10 @@ void List::print_menu() {
 			calc_hash_Blake3(true);
 			break;
 		case 6:
-			list = db.read();
+			list = db.readData();
 			break;
 		case 7:
-			db.write(list);
+			db.writeData(list);
 			break;
 		case 8:
 			benchmark();    
@@ -87,7 +87,7 @@ void List::delete_item() {
 	}
 }
 
-void List::calc_hash_for_all(bool printOnTerminal) {
+double List::calc_hash_for_all(bool printOnTerminal) {
 	// start function execution
     auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < (int)list.size(); i++) {
@@ -105,15 +105,20 @@ void List::calc_hash_for_all(bool printOnTerminal) {
 				printf("%02x ", hash[j]);
 			}
 			cout << endl;
+			db.writeHashToFile(hash);
 		}
 
 	}
 	auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
-    cout << "Elapsed time for Blake2b: " << elapsed.count() << " s" << endl;
+	if (printOnTerminal) {
+    	cout << "Elapsed time for Blake2b: " << elapsed.count() << " s" << endl;
+	}
+	return elapsed.count();
+
 }
 
-void List::calc_hash_Blake3(bool printOnTerminal) {
+double List::calc_hash_Blake3(bool printOnTerminal) {
     auto start = std::chrono::high_resolution_clock::now(); 
 	for (int i = 0; i < (int)list.size(); i++) {
 		
@@ -132,16 +137,27 @@ void List::calc_hash_Blake3(bool printOnTerminal) {
 				printf("%02x ", output[i]);
 			}
 			printf("\n");
+			db.writeHashToFile(output);
 		}
 
 	}
 	auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
-    cout << "Elapsed time for Blake3: " << elapsed.count() << " s" << endl;
+	if (printOnTerminal) {
+    	cout << "Elapsed time for Blake3: " << elapsed.count() << " s" << endl;
+	}
+	return elapsed.count();
 }
 
 void List::benchmark() {
 	cout << "Benchmark using " << list.size() << " list items" << endl;
-	calc_hash_for_all(false);
-	calc_hash_Blake3(false);
+	double blake2TotalTime = 0;
+	double blake3TotalTime = 0;
+
+	for (int i = 0; i < 10; i++) {
+		blake2TotalTime += calc_hash_for_all(false);
+		blake3TotalTime += calc_hash_Blake3(false);
+	}
+	cout << "Blake2b average time for 10 runs: " << (blake2TotalTime / 10) << " s" << endl; 
+	cout << "Blake3 average time for 10 runs: " << (blake3TotalTime / 10) << " s" << endl; 
 }
