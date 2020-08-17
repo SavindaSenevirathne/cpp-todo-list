@@ -2,6 +2,7 @@
 #include <vector>
 #include <sodium.h>
 #include <blake3.h>
+#include "database.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ class List
     public:
         string name;
         vector<string> list;
+        Database db;
         void print_menu();
         void add_item();
         void print_all();

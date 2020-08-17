@@ -1,4 +1,5 @@
 #include "include/list.h"
+#include <chrono>  // for high_resolution_clock
 
 void List::print_menu() {
 	cout << "\n\n\n*******************" << endl;
@@ -7,7 +8,9 @@ void List::print_menu() {
 	cout << "3. Delete an item by index" << endl;
 	cout << "4. Hash of all using libsodium" << endl;
 	cout << "5. Hash of all using Blake 3" << endl;
-	cout << "6. Exit program" << endl;
+	cout << "6. Read from file" << endl;
+	cout << "7. Write to the file" << endl;
+	cout << "8. Exit program" << endl;
 	cout << "Enter your choice: ";
 
 	int choice;
@@ -33,6 +36,12 @@ void List::print_menu() {
 			calc_hash_Blake3();
 			break;
 		case 6:
+			list = db.read();
+			break;
+		case 7:
+			db.write(list);
+			break;
+		case 8:
 			exit(0);    
 			break;
 		default:
@@ -75,6 +84,8 @@ void List::delete_item() {
 }
 
 void List::calc_hash_for_all() {
+	// start function execution
+    auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < (int)list.size(); i++) {
 		// variable to store generated hash
 		unsigned char hash[crypto_generichash_BYTES];
@@ -91,9 +102,13 @@ void List::calc_hash_for_all() {
 		cout << endl;
 
 	}
+	auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    cout << "Elapsed time: " << elapsed.count() << " s" << endl;
 }
 
 void List::calc_hash_Blake3() {
+    auto start = std::chrono::high_resolution_clock::now(); 
 	for (int i = 0; i < (int)list.size(); i++) {
 		
 		// Initialize the hasher.
@@ -112,4 +127,7 @@ void List::calc_hash_Blake3() {
 		printf("\n");
 
 	}
+	auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    cout << "Elapsed time: " << elapsed.count() << " s" << endl;
 }
