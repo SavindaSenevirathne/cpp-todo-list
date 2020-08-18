@@ -9,11 +9,12 @@ using namespace std;
 class Database
 {
     private:
+    public:
         /* data */
         int hashFile;
-    public:
         Database() {
-            hashFile = open("data/hash", O_WRONLY);
+            // create new file if it is not already exists
+            hashFile = open("data/hash", O_RDWR | O_CREAT);
             if (hashFile == -1) {
                 cout << "Opening file failed." << endl;
                 exit(-1);
@@ -24,6 +25,7 @@ class Database
         }
         void writeData(vector<string> list);
         vector<string> readData();
-        void writeHashToFile(unsigned char*);
+        void writeHashToFile(unsigned char*, int);
+        void readHashFromFile();
 };
 

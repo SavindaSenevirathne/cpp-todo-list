@@ -37,7 +37,24 @@ void Database::writeData(vector<string> list) {
 	database.close();
 }
 
-void Database::writeHashToFile(unsigned char* hash) {
-	write(hashFile, hash, strlen((const char*)hash));
-	write(hashFile, "\n", 2);
+void Database::writeHashToFile(unsigned char* hash, int len) {
+	write(hashFile, hash, len);
+}
+
+void Database::readHashFromFile() {
+	// move file descriptor to the begining of the file before start reading
+	lseek(hashFile, 0, SEEK_SET);
+	// buffer to store reading hash
+	unsigned char buff[32];
+	// index
+	int index = 1;
+	// read one hash after another and print it in hexa format
+	while(read(hashFile, buff, 32) == 32) {
+		cout << index << "\t->\t";
+		for (size_t i = 0; i < 32; i++) {
+			printf("%02x ", buff[i]);
+		}
+		cout << endl; 
+		index++;
+	}
 }

@@ -11,7 +11,8 @@ void List::print_menu() {
 	cout << "6. Read from file" << endl;
 	cout << "7. Write to the file" << endl;
 	cout << "8. Benchmark" << endl;
-	cout << "9. Exit program" << endl;
+	cout << "9. Read hash for Blake3 from file" << endl;
+	cout << "10. Exit program" << endl;
 	cout << "Enter your choice: ";
 
 	int choice;
@@ -46,6 +47,9 @@ void List::print_menu() {
 			benchmark();    
 			break;
 		case 9:
+			db.readHashFromFile();    
+			break;
+		case 10:
 			exit(0);    
 			break;
 		default:
@@ -88,6 +92,8 @@ void List::delete_item() {
 }
 
 double List::calc_hash_for_all(bool printOnTerminal) {
+	// remove the content in the file from the previous run
+	ftruncate(db.hashFile, 0);
 	// start function execution
     auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < (int)list.size(); i++) {
@@ -105,7 +111,8 @@ double List::calc_hash_for_all(bool printOnTerminal) {
 				printf("%02x ", hash[j]);
 			}
 			cout << endl;
-			db.writeHashToFile(hash);
+			// write hashes to the binary file
+			db.writeHashToFile(hash, crypto_generichash_BYTES);
 		}
 
 	}
@@ -119,6 +126,8 @@ double List::calc_hash_for_all(bool printOnTerminal) {
 }
 
 double List::calc_hash_Blake3(bool printOnTerminal) {
+	// remove the content in the file from the previous run
+	ftruncate(db.hashFile, 0);
     auto start = std::chrono::high_resolution_clock::now(); 
 	for (int i = 0; i < (int)list.size(); i++) {
 		
@@ -137,7 +146,8 @@ double List::calc_hash_Blake3(bool printOnTerminal) {
 				printf("%02x ", output[i]);
 			}
 			printf("\n");
-			db.writeHashToFile(output);
+			// write hashes to the binary file
+			db.writeHashToFile(output, BLAKE3_OUT_LEN);
 		}
 
 	}
